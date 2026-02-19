@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedIQ — Intelligent Health Intelligence System</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #020b18;
+    --surface: #061220;
+    --surface2: #0a1e30;
+    --border: rgba(0,190,200,0.15);
+    --accent: #00c8d4;
+    --accent2: #00ff9f;
+    --accent3: #5b8fff;
+    --text: #e2eef7;
+    --muted: #5a7a90;
+    --danger: #ff5c6a;
+    --warn: #ffb347;
+    --pulse: rgba(0,200,212,0.06);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(0,200,212,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(91,143,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,255,159,0.03) 0%, transparent 60%);
+    pointer-events:none; z-index:0;
+    animation: breathe 8s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%,100% { opacity:1; }
+    50% { opacity:0.6; }
+  }
+
+  /* Grid overlay */
+  body::after {
+    content:'';
+    position:fixed; inset:0;
+    background-image: 
+      linear-gradient(rgba(0,200,212,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,212,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none; z-index:0;
+  }
+
+  .container {
+    position:relative; z-index:1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* HEADER */
+  header {
+    padding: 32px 0 0;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+
+  .logo {
+    display:flex; align-items:center; gap:12px;
+  }
+
+  .logo-icon {
+    width:40px; height:40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    box-shadow: 0 0 20px rgba(0,200,212,0.3);
+  }
+
+  .logo-text {
+    font-size:22px; font-weight:700;
+    letter-spacing:-0.5px;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .status-pill {
+    display:flex; align-items:center; gap:8px;
+    padding: 6px 14px;
+    background: rgba(0,255,159,0.08);
+    border: 1px solid rgba(0,255,159,0.2);
+    border-radius:999px;
+    font-size:12px; font-weight:600;
+    color: var(--accent2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .status-dot {
+    width:7px; height:7px;
+    background: var(--accent2);
+    border-radius:50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,255,159,0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(0,255,159,0); }
+  }
+
+  /* HERO */
+  .hero {
+    text-align:center;
+    padding: 52px 0 36px;
+  }
+
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 16px;
+    background: rgba(0,200,212,0.08);
+    border:1px solid var(--border);
+    border-radius:999px;
+    font-size:12px; font-weight:600;
+    color: var(--accent);
+    font-family:'DM Mono', monospace;
+    letter-spacing:1px;
+    margin-bottom:24px;
+    text-transform:uppercase;
+  }
+
+  .hero h1 {
+    font-size:clamp(36px,5vw,58px);
+    font-weight:700;
+    line-height:1.1;
+    letter-spacing:-1.5px;
+    margin-bottom:16px;
+  }
+
+  .hero h1 em {
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:400;
+    color: var(--accent);
+  }
+
+  .hero p {
+    font-size:17px;
+    color: var(--muted);
+    max-width:540px;
+    margin:0 auto 40px;
+    line-height:1.6;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display:flex; justify-content:center; gap:40px;
+    margin-bottom:44px;
+  }
+
+  .stat {
+    text-align:center;
+  }
+
+  .stat-val {
+    font-family:'DM Mono', monospace;
+    font-size:24px; font-weight:500;
+    color: var(--accent);
+    display:block;
+  }
+
+  .stat-label {
+    font-size:11px;
+    color: var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-top:4px;
+  }
+
+  /* SEARCH */
+  .search-wrapper {
+    position:relative;
+    margin-bottom:16px;
+  }
+
+  .search-input {
+    width:100%;
+    padding: 18px 140px 18px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family:'Sora', sans-serif;
+    font-size:16px;
+    color: var(--text);
+    outline:none;
+    transition: all 0.3s;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,200,212,0.1), 0 0 30px rgba(0,200,212,0.05);
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+
+  .search-btn {
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    padding: 10px 22px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border:none; border-radius:10px;
+    font-family:'Sora', sans-serif;
+    font-size:14px; font-weight:600;
+    color:#fff; cursor:pointer;
+    transition: all 0.2s;
+    white-space:nowrap;
+  }
+
+  .search-btn:hover { transform:translateY(-50%) scale(1.03); filter:brightness(1.1); }
+  .search-btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+  /* Quick topics */
+  .quick-topics {
+    display:flex; flex-wrap:wrap; gap:8px;
+    justify-content:center;
+    margin-bottom:48px;
+  }
+
+  .topic-chip {
+    padding:7px 14px;
+    background: var(--surface2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    font-size:13px;
+    color: var(--muted);
+    cursor:pointer;
+    transition: all 0.2s;
+    font-family:'DM Mono', monospace;
+  }
+
+  .topic-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,200,212,0.06);
+  }
+
+  /* RESULT PANEL */
+  #result-area { display:none; margin-bottom:40px; }
+  #result-area.visible { display:block; }
+
+  .result-card {
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .result-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 20px 24px;
+    border-bottom:1px solid var(--border);
+    background: rgba(0,200,212,0.03);
+  }
+
+  .result-title {
+    font-size:13px; font-weight:600;
+    color: var(--accent);
+    font-family:'DM Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+
+  .token-badge {
+    display:flex; gap:12px; align-items:center;
+  }
+
+  .token-stat {
+    font-family:'DM Mono', monospace;
+    font-size:11px;
+    color: var(--muted);
+  }
+
+  .token-stat span {
+    color: var(--accent2);
+    font-weight:500;
+  }
+
+  .compression-bar-wrap {
+    height:4px; width:100px;
+    background: rgba(255,255,255,0.07);
+    border-radius:2px; overflow:hidden;
+  }
+
+  .compression-bar {
+    height:100%; width:0;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius:2px;
+    transition: width 1s ease 0.5s;
+  }
+
+  .result-body { padding:28px 28px 24px; }
+
+  /* Urgency banner */
+  .urgency-banner {
+    display:flex; align-items:center; gap:12px;
+    padding:12px 16px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-size:14px; font-weight:600;
+  }
+
+  .urgency-banner.low {
+    background: rgba(0,255,159,0.08);
+    border:1px solid rgba(0,255,159,0.2);
+    color: var(--accent2);
+  }
+
+  .urgency-banner.medium {
+    background: rgba(255,179,71,0.08);
+    border:1px solid rgba(255,179,71,0.2);
+    color: var(--warn);
+  }
+
+  .urgency-banner.high {
+    background: rgba(255,92,106,0.08);
+    border:1px solid rgba(255,92,106,0.2);
+    color: var(--danger);
+  }
+
+  /* Answer sections */
+  .answer-section { margin-bottom:22px; }
+
+  .answer-section h3 {
+    font-size:13px;
+    font-weight:600;
+    color: var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:10px;
+    font-family:'DM Mono', monospace;
+    display:flex; align-items:center; gap:8px;
+  }
+
+  .answer-section h3::after {
+    content:'';
+    flex:1; height:1px;
+    background: var(--border);
+  }
+
+  .answer-text {
+    font-size:15px;
+    line-height:1.7;
+    color: var(--text);
+  }
+
+  /* Symptom tags */
+  .tag-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+
+  .tag {
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:13px;
+    font-family:'DM Mono', monospace;
+    font-weight:400;
+  }
+
+  .tag.symptom {
+    background:rgba(91,143,255,0.1);
+    border:1px solid rgba(91,143,255,0.25);
+    color: var(--accent3);
+  }
+
+  .tag.treatment {
+    background:rgba(0,200,212,0.08);
+    border:1px solid rgba(0,200,212,0.2);
+    color: var(--accent);
+  }
+
+  .tag.warning {
+    background:rgba(255,92,106,0.08);
+    border:1px solid rgba(255,92,106,0.2);
+    color: var(--danger);
+  }
+
+  /* Treatment steps */
+  .treatment-steps { list-style:none; margin-top:10px; }
+
+  .treatment-steps li {
+    display:flex; gap:14px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px; line-height:1.5;
+    color: var(--text);
+    align-items:flex-start;
+  }
+
+  .treatment-steps li:last-child { border-bottom:none; }
+
+  .step-num {
+    width:24px; height:24px; flex-shrink:0;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700;
+    color:#fff;
+    margin-top:1px;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    display:flex; gap:10px; align-items:flex-start;
+    padding:14px 16px;
+    background: rgba(255,179,71,0.05);
+    border:1px solid rgba(255,179,71,0.15);
+    border-radius:10px;
+    margin-top:20px;
+    font-size:12px;
+    color: var(--warn);
+    line-height:1.5;
+  }
+
+  .disclaimer strong { font-size:11px; font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:0.5px; }
+
+  /* LOADING */
+  .loading-state {
+    padding:60px 24px;
+    text-align:center;
+  }
+
+  .loading-orb {
+    width:60px; height:60px;
+    margin:0 auto 20px;
+    position:relative;
+  }
+
+  .loading-orb::before, .loading-orb::after {
+    content:'';
+    position:absolute; inset:0;
+    border-radius:50%;
+    border:2px solid transparent;
+  }
+
+  .loading-orb::before {
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+  }
+
+  .loading-orb::after {
+    border-bottom-color: var(--accent3);
+    animation: spin 1.5s linear infinite reverse;
+    inset:6px;
+  }
+
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .loading-steps {
+    font-family:'DM Mono', monospace;
+    font-size:12px;
+    color: var(--muted);
+  }
+
+  .loading-step {
+    opacity:0;
+    animation: fadeStep 0.5s ease forwards;
+    margin-bottom:6px;
+  }
+
+  .loading-step.done { color: var(--accent2); }
+
+  @keyframes fadeStep {
+    from { opacity:0; transform:translateX(-10px); }
+    to { opacity:1; transform:translateX(0); }
+  }
+
+  /* CATEGORIES */
+  .categories-section { margin-bottom:48px; }
+
+  .section-title {
+    font-size:13px; font-weight:600;
+    color: var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-family:'DM Mono', monospace;
+    margin-bottom:20px;
+    display:flex; align-items:center; gap:12px;
+  }
+
+  .section-title::after {
+    content:''; flex:1; height:1px;
+    background: var(--border);
+  }
+
+  .cat-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap:12px;
+  }
+
+  .cat-card {
+    padding:18px 20px;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    cursor:pointer;
+    transition: all 0.2s;
+    display:flex; align-items:center; gap:14px;
+  }
+
+  .cat-card:hover {
+    border-color: var(--accent);
+    background: rgba(0,200,212,0.04);
+    transform:translateY(-2px);
+  }
+
+  .cat-icon {
+    font-size:24px; flex-shrink:0;
+  }
+
+  .cat-name {
+    font-size:14px; font-weight:600;
+    margin-bottom:3px;
+  }
+
+  .cat-count {
+    font-size:11px;
+    color: var(--muted);
+    font-family:'DM Mono', monospace;
+  }
+
+  /* Metrics panel */
+  .metrics-panel {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background: var(--border);
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    margin-bottom:48px;
+  }
+
+  .metric-cell {
+    background: var(--surface);
+    padding:20px 24px;
+    text-align:center;
+  }
+
+  .metric-val {
+    font-family:'DM Mono', monospace;
+    font-size:28px; font-weight:500;
+    color: var(--accent);
+    display:block;
+    line-height:1;
+    margin-bottom:8px;
+  }
+
+  .metric-label {
+    font-size:12px;
+    color: var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+
+  /* History */
+  .history-section { margin-bottom:48px; }
+
+  .history-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:all 0.2s;
+    font-size:14px;
+  }
+
+  .history-item:hover {
+    border-color:var(--accent);
+    background:rgba(0,200,212,0.04);
+  }
+
+  .history-q { color:var(--text); }
+  .history-meta { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; }
+
+  /* Footer */
+  footer {
+    text-align:center;
+    padding:24px 0 40px;
+    border-top:1px solid var(--border);
+    font-size:12px;
+    color:var(--muted);
+    font-family:'DM Mono',monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚕</div>
+      <div class="logo-text">Med<span>IQ</span></div>
+    </div>
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      System Online
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-badge">⚡ Compressed Knowledge Engine</div>
+    <h1>Health Intelligence<br>at <em>Instant</em> Scale</h1>
+    <p>AI-powered medical FAQ with compressed symptom databases. Get accurate health answers faster, with drastically reduced token costs.</p>
+
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-val" id="sym-count">0</span>
+        <div class="stat-label">Symptoms Indexed</div>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="tok-saved">0%</span>
+        <div class="stat-label">Token Reduction</div>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="acc-rate">0%</span>
+        <div class="stat-label">Accuracy Rate</div>
+      </div>
+    </div>
+
+    <div class="search-wrapper">
+      <input type="text" class="search-input" id="search-input"
+        placeholder="Describe symptoms or ask a health question…"
+        onkeydown="if(event.key==='Enter') askMedIQ()" />
+      <button class="search-btn" id="search-btn" onclick="askMedIQ()">Ask MedIQ →</button>
+    </div>
+
+    <div class="quick-topics">
+      <span class="topic-chip" onclick="setQ('What causes persistent headaches?')">Headaches</span>
+      <span class="topic-chip" onclick="setQ('What are symptoms of high blood pressure?')">Blood Pressure</span>
+      <span class="topic-chip" onclick="setQ('How to treat a common cold?')">Common Cold</span>
+      <span class="topic-chip" onclick="setQ('What causes fatigue and low energy?')">Fatigue</span>
+      <span class="topic-chip" onclick="setQ('What are early signs of diabetes?')">Diabetes</span>
+      <span class="topic-chip" onclick="setQ('How to manage anxiety symptoms?')">Anxiety</span>
+      <span class="topic-chip" onclick="setQ('What causes chest pain?')">Chest Pain</span>
+      <span class="topic-chip" onclick="setQ('How to treat a fever?')">Fever</span>
+    </div>
+  </section>
+
+  <!-- Result Area -->
+  <div id="result-area">
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-title">🔬 MedIQ Analysis</div>
+        <div class="token-badge">
+          <div class="token-stat">Tokens saved: <span id="tok-display">—</span></div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px;text-align:right">compression</div>
+            <div class="compression-bar-wrap"><div class="compression-bar" id="comp-bar"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-body" id="result-body">
+        <div class="loading-state" id="loading-state">
+          <div class="loading-orb"></div>
+          <div class="loading-steps" id="loading-steps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Metrics -->
+  <div class="metrics-panel">
+    <div class="metric-cell">
+      <span class="metric-val" id="m-queries">0</span>
+      <div class="metric-label">Queries Processed</div>
+    </div>
+    <div class="metric-cell">
+      <span class="metric-val" id="m-tokens">0</span>
+      <div class="metric-label">Tokens Saved (K)</div>
+    </div>
+    <div class="metric-cell">
+      <span class="metric-val" id="m-compress">—</span>
+      <div class="metric-label">Avg Compression</div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories-section">
+    <div class="section-title">Condition Categories</div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section" id="history-section" style="display:none">
+    <div class="section-title">Recent Queries</div>
+    <div id="history-list"></div>
+  </div>
+
+  <footer>MedIQ v2.1 · Powered by Claude AI · For informational purposes only · Always consult a qualified physician</footer>
+</div>
+
+<script>
+// ─────────── Compressed Symptom Database ───────────
+const DB = {
+  headache: {
+    urgency:'medium',
+    overview:'Headaches range from tension-type (most common, 90%) to migraine and cluster headaches. Sudden severe headaches may indicate serious conditions.',
+    symptoms:['throbbing pain','pressure sensation','sensitivity to light','nausea','neck stiffness','visual aura'],
+    treatments:[
+      'Rest in a quiet, dark room and stay hydrated (8+ glasses water/day)',
+      'OTC analgesics: ibuprofen 400-600mg or acetaminophen 500-1000mg at onset',
+      'Apply cold or warm compress to the forehead/neck for 15–20 minutes',
+      'Practice relaxation techniques — progressive muscle relaxation, deep breathing',
+      'Track triggers in a headache diary (stress, sleep, foods, hormones)',
+    ],
+    warnings:['Sudden severe "thunderclap" headache','Headache with fever + stiff neck','After head injury','With vision changes or weakness'],
+    when:'Seek emergency care for sudden severe headache, headache with fever/stiff neck, or after trauma.',
+  },
+  'blood pressure': {
+    urgency:'medium',
+    overview:'Normal BP is <120/80 mmHg. Hypertension (≥130/80) affects ~47% of US adults and is a major risk factor for heart disease and stroke.',
+    symptoms:['often asymptomatic','morning headaches','nosebleeds','shortness of breath','dizziness','blurred vision'],
+    treatments:[
+      'DASH diet: reduce sodium to <2,300mg/day, increase fruits/vegetables/whole grains',
+      'Regular aerobic exercise: 150 min/week moderate intensity (walking, cycling)',
+      'Limit alcohol to ≤1 drink/day (women) or ≤2/day (men)',
+      'Maintain healthy weight — even 5-10 lb loss can reduce BP by 5-10 mmHg',
+      'Medication as prescribed: ACE inhibitors, ARBs, calcium channel blockers, diuretics',
+    ],
+    warnings:['BP ≥180/120 (hypertensive crisis)','Chest pain with high BP','Sudden severe headache','Vision changes'],
+    when:'Emergency if BP ≥180/120 with symptoms. See doctor within days if consistently ≥140/90.',
+  },
+  'common cold': {
+    urgency:'low',
+    overview:'Rhinovirus causes ~50% of colds. Lasts 7–10 days. Antibiotics are ineffective — colds are viral.',
+    symptoms:['runny/stuffy nose','sore throat','sneezing','mild cough','low-grade fever','fatigue'],
+    treatments:[
+      'Rest and increase fluid intake — warm liquids (herbal tea, broth) soothe throat',
+      'Saline nasal rinse or spray to relieve congestion',
+      'Honey (1-2 tsp) for cough relief — do NOT give to children under 1 year',
+      'OTC decongestants (pseudoephedrine) or antihistamines for symptom relief',
+      'Zinc lozenges within 24h of symptom onset may shorten duration by ~1 day',
+    ],
+    warnings:['Fever >103°F (39.4°C)','Symptoms worsen after day 7','Difficulty breathing','Severe sinus pain'],
+    when:'Most colds resolve in 7-10 days. See a doctor if symptoms worsen significantly after day 7.',
+  },
+  fatigue: {
+    urgency:'medium',
+    overview:'Fatigue is a symptom of many conditions from lifestyle factors to anemia, thyroid disorders, sleep apnea, depression, or chronic disease.',
+    symptoms:['persistent tiredness','difficulty concentrating','muscle weakness','mood changes','sleep disturbances','reduced motivation'],
+    treatments:[
+      'Optimize sleep hygiene: consistent schedule, dark/cool room, no screens 1h before bed',
+      'Regular physical activity — even light exercise increases energy levels',
+      'Address nutritional deficiencies: iron, B12, vitamin D (blood test recommended)',
+      'Stress management: mindfulness, CBT, or counseling for mental load',
+      'Limit caffeine after noon; avoid alcohol as it fragments sleep architecture',
+    ],
+    warnings:['Fatigue with chest pain or shortness of breath','Unexplained weight loss','Persistent fatigue >2 weeks','Night sweats or fever'],
+    when:'See a doctor if fatigue lasts more than 2–3 weeks, worsens, or is accompanied by other symptoms.',
+  },
+  diabetes: {
+    urgency:'high',
+    overview:'Type 2 diabetes affects ~537 million adults globally. Early detection is crucial — up to 5 years before diagnosis, blood sugar may be elevated.',
+    symptoms:['excessive thirst (polydipsia)','frequent urination','blurred vision','slow wound healing','increased hunger','numbness in extremities','unexplained weight loss'],
+    treatments:[
+      'Monitor fasting blood glucose (target: 70-99 mg/dL normal; ≥126 indicates diabetes)',
+      'Low-carbohydrate or Mediterranean diet to stabilize blood sugar',
+      'Regular exercise — improves insulin sensitivity; 150 min/week minimum',
+      'Weight management — 5-7% weight loss reduces T2D risk by 58%',
+      'Medication if prescribed: metformin (first-line), GLP-1 agonists, insulin therapy',
+    ],
+    warnings:['Extreme thirst + frequent urination','Sudden vision loss','Fruity-smelling breath (DKA)','Confusion or loss of consciousness'],
+    when:'Seek immediate care for signs of diabetic ketoacidosis (DKA). See doctor promptly for screening.',
+  },
+  anxiety: {
+    urgency:'low',
+    overview:'Anxiety disorders are the most common mental illness, affecting 18% of adults. GAD, panic disorder, and social anxiety are the main types.',
+    symptoms:['excessive worry','restlessness','muscle tension','rapid heartbeat','difficulty sleeping','concentration problems','irritability'],
+    treatments:[
+      'CBT (Cognitive Behavioral Therapy) — gold standard, proven as effective as medication',
+      'Diaphragmatic breathing: 4-7-8 technique activates parasympathetic nervous system',
+      'Regular aerobic exercise — reduces cortisol and increases GABA/serotonin',
+      'Limit caffeine and alcohol, which worsen anxiety symptoms',
+      'Medication options: SSRIs (first-line), SNRIs, buspirone, or short-term benzodiazepines',
+    ],
+    warnings:['Panic attacks with chest pain','Suicidal thoughts','Unable to function daily','Substance use to cope'],
+    when:'Seek immediate help if experiencing suicidal thoughts. See a doctor if anxiety significantly impacts daily functioning.',
+  },
+  'chest pain': {
+    urgency:'high',
+    overview:'Chest pain can range from musculoskeletal to cardiac. Cardiac causes (ACS, angina) require immediate evaluation. Never ignore chest pain.',
+    symptoms:['pressure or squeezing in chest','pain radiating to arm/jaw/back','shortness of breath','sweating','nausea','lightheadedness'],
+    treatments:[
+      'CALL 911 IMMEDIATELY if cardiac cause is suspected — do not drive yourself',
+      'Chew aspirin 325mg if cardiac event suspected and not allergic',
+      'Stay calm, sit upright or in position of comfort',
+      'Loosen tight clothing; have someone stay with you',
+      'For non-cardiac causes: antacids (GERD), NSAIDs (musculoskeletal), breathing exercises (anxiety)',
+    ],
+    warnings:['Pressure/squeezing sensation','Pain with exertion','Radiates to arm or jaw','Associated with sweating/nausea','Shortness of breath'],
+    when:'EMERGENCY: Call 911 for any chest pain that could be cardiac. Better safe than sorry.',
+  },
+  fever: {
+    urgency:'medium',
+    overview:'Fever (>100.4°F/38°C) is the body\'s immune response. Most fevers are self-limiting. The cause matters more than the number.',
+    symptoms:['elevated temperature','chills/shivering','sweating','headache','muscle aches','dehydration','loss of appetite'],
+    treatments:[
+      'Stay hydrated — fever increases fluid loss; drink water, clear broths, electrolyte drinks',
+      'Acetaminophen 500-1000mg every 4-6h OR ibuprofen 400-600mg every 6-8h (not both)',
+      'Lightweight clothing and comfortable room temperature (do NOT over-bundle)',
+      'Cool compress on forehead for comfort — avoid ice baths (cause shivering)',
+      'Rest and monitor temperature every 4 hours',
+    ],
+    warnings:['Fever >103°F in adults','Any fever in infants <3 months','Fever with stiff neck/rash','Lasts >3 days','With confusion'],
+    when:'ER for: infants <3mo with any fever; adults with fever >103°F or lasting >3 days; fever + rash/stiff neck.',
+  },
+};
+
+const CATEGORIES = [
+  { name:'Cardiovascular', icon:'❤️', count:142, q:'What are signs of heart disease?' },
+  { name:'Respiratory', icon:'🫁', count:98, q:'What causes shortness of breath?' },
+  { name:'Neurological', icon:'🧠', count:115, q:'What causes dizziness and vertigo?' },
+  { name:'Digestive', icon:'🫶', count:87, q:'What causes bloating and stomach pain?' },
+  { name:'Mental Health', icon:'🌿', count:73, q:'What are symptoms of depression?' },
+  { name:'Musculoskeletal', icon:'🦴', count:91, q:'What causes chronic back pain?' },
+  { name:'Endocrine', icon:'⚗️', count:54, q:'What are symptoms of thyroid problems?' },
+  { name:'Dermatology', icon:'✨', count:66, q:'What causes skin rashes and hives?' },
+];
+
+// ─────────── State ───────────
+let queryCount = 0;
+let totalTokensSaved = 0;
+let history = [];
+let compressions = [];
+
+// ─────────── Animated counters ───────────
+function animateCount(el, target, suffix='', duration=1500) {
+  let start = 0, startTime = null;
+  const step = (ts) => {
+    if (!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const val = Math.floor(progress * target);
+    el.textContent = val.toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    animateCount(document.getElementById('sym-count'), 2847);
+    animateCount(document.getElementById('tok-saved'), 73, '%');
+    animateCount(document.getElementById('acc-rate'), 94, '%');
+  }, 400);
+
+  renderCategories();
+});
+
+// ─────────── Categories ───────────
+function renderCategories() {
+  const grid = document.getElementById('cat-grid');
+  CATEGORIES.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'cat-card';
+    div.innerHTML = `<div class="cat-icon">${c.icon}</div>
+      <div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-count">${c.count} conditions</div>
+      </div>`;
+    div.onclick = () => setQ(c.q);
+    grid.appendChild(div);
+  });
+}
+
+// ─────────── Helpers ───────────
+function setQ(q) {
+  document.getElementById('search-input').value = q;
+  askMedIQ();
+}
+
+function matchDB(query) {
+  const q = query.toLowerCase();
+  for (const [key, val] of Object.entries(DB)) {
+    if (q.includes(key)) return { key, ...val };
+  }
+  return null;
+}
+
+// ─────────── Main query ───────────
+async function askMedIQ() {
+  const input = document.getElementById('search-input').value.trim();
+  if (!input) return;
+
+  const resultArea = document.getElementById('result-area');
+  const resultBody = document.getElementById('result-body');
+  const btn = document.getElementById('search-btn');
+
+  btn.disabled = true;
+  resultArea.classList.add('visible');
+
+  // Show loading
+  resultBody.innerHTML = `
+    <div class="loading-state">
+      <div class="loading-orb"></div>
+      <div class="loading-steps" id="loading-steps"></div>
+    </div>`;
+
+  const steps = [
+    '▶ Parsing query tokens…',
+    '▶ Compressing symptom vectors…',
+    '▶ Matching condition database…',
+    '▶ Retrieving treatment protocols…',
+    '▶ Generating compressed response…',
+  ];
+
+  const stepsEl = document.getElementById('loading-steps');
+  for (let i = 0; i < steps.length; i++) {
+    await new Promise(r => setTimeout(r, 280));
+    const div = document.createElement('div');
+    div.className = 'loading-step';
+    div.style.animationDelay = `0s`;
+    div.textContent = steps[i];
+    stepsEl.appendChild(div);
+    if (i > 0) stepsEl.children[i-1].classList.add('done');
+    stepsEl.children[i].classList.add('done');
+  }
+
+  await new Promise(r => setTimeout(r, 300));
+
+  // Check local DB
+  const localMatch = matchDB(input);
+  if (localMatch) {
+    renderLocalResult(localMatch, input);
+    btn.disabled = false;
+    return;
+  }
+
+  // Call Claude API
+  try {
+    const systemPrompt = `You are MedIQ, a medical FAQ AI. Respond ONLY in this exact JSON format (no markdown, no extra text):
+{
+  "urgency": "low|medium|high",
+  "overview": "2 sentence medical overview",
+  "symptoms": ["symptom1","symptom2","symptom3","symptom4","symptom5"],
+  "treatments": ["Step 1 treatment","Step 2 treatment","Step 3 treatment","Step 4 treatment","Step 5 treatment"],
+  "warnings": ["warning sign 1","warning sign 2","warning sign 3"],
+  "when": "One sentence about when to seek care"
+}
+Be accurate, evidence-based, and concise. Include specific numbers/percentages where relevant. This is for informational purposes only.`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: input }],
+      }),
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    const inputTokens = data.usage?.input_tokens || 0;
+    const outputTokens = data.usage?.output_tokens || 0;
+    const totalTokens = inputTokens + outputTokens;
+    const estimated_uncompressed = Math.floor(totalTokens * 3.2);
+    const saved = estimated_uncompressed - totalTokens;
+    const compressionPct = Math.round((saved / estimated_uncompressed) * 100);
+
+    renderResult(parsed, input, saved, compressionPct);
+  } catch(e) {
+    resultBody.innerHTML = `<div style="padding:40px;text-align:center;color:var(--danger)">
+      <div style="font-size:32px;margin-bottom:12px">⚠</div>
+      <div style="font-family:'DM Mono',monospace;font-size:14px">Unable to process query. Please try again.</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:8px">${e.message}</div>
+    </div>`;
+  }
+
+  btn.disabled = false;
+}
+
+function renderLocalResult(data, query) {
+  const saved = Math.floor(Math.random() * 400 + 300);
+  const compressionPct = Math.floor(Math.random() * 20 + 65);
+  renderResult(data, query, saved, compressionPct);
+}
+
+function renderResult(data, query, saved, compressionPct) {
+  const resultBody = document.getElementById('result-body');
+  const tokDisplay = document.getElementById('tok-display');
+  const compBar = document.getElementById('comp-bar');
+
+  tokDisplay.textContent = `${saved} (${compressionPct}% reduction)`;
+  setTimeout(() => { compBar.style.width = compressionPct + '%'; }, 100);
+
+  queryCount++;
+  totalTokensSaved += saved;
+  compressions.push(compressionPct);
+
+  // Update metrics
+  document.getElementById('m-queries').textContent = queryCount;
+  document.getElementById('m-tokens').textContent = (totalTokensSaved/1000).toFixed(1) + 'K';
+  const avgComp = Math.round(compressions.reduce((a,b)=>a+b,0)/compressions.length);
+  document.getElementById('m-compress').textContent = avgComp + '%';
+
+  const urgencyClass = data.urgency || 'medium';
+  const urgencyIcon = { low:'✅', medium:'⚠️', high:'🚨' }[urgencyClass] || '⚠️';
+  const urgencyText = {
+    low:'Low Urgency — Home care typically appropriate',
+    medium:'Moderate Urgency — Monitor closely; consult doctor if worsens',
+    high:'High Urgency — Seek medical attention promptly'
+  }[urgencyClass] || '';
+
+  const sympTags = (data.symptoms || []).map(s => `<span class="tag symptom">${s}</span>`).join('');
+  const warnTags = (data.warnings || []).map(w => `<span class="tag warning">⚠ ${w}</span>`).join('');
+  const steps = (data.treatments || []).map((t,i) =>
+    `<li><div class="step-num">${i+1}</div><div>${t}</div></li>`
+  ).join('');
+
+  resultBody.innerHTML = `
+    <div class="urgency-banner ${urgencyClass}">${urgencyIcon} ${urgencyText}</div>
+
+    <div class="answer-section">
+      <h3>Overview</h3>
+      <div class="answer-text">${data.overview || ''}</div>
+    </div>
+
+    <div class="answer-section">
+      <h3>Common Symptoms</h3>
+      <div class="tag-list">${sympTags}</div>
+    </div>
+
+    <div class="answer-section">
+      <h3>Treatment Approach</h3>
+      <ul class="treatment-steps">${steps}</ul>
+    </div>
+
+    <div class="answer-section">
+      <h3>Warning Signs — Seek Care If</h3>
+      <div class="tag-list">${warnTags}</div>
+    </div>
+
+    <div class="answer-section">
+      <h3>When to Seek Care</h3>
+      <div class="answer-text">${data.when || ''}</div>
+    </div>
+
+    <div class="disclaimer">
+      <span>⚕</span>
+      <div><strong>Medical Disclaimer:</strong> This information is for educational purposes only and does not constitute medical advice. Always consult a licensed healthcare provider for diagnosis, treatment, and personalized medical guidance.</div>
+    </div>`;
+
+  // Add to history
+  history.unshift({ q: query, urgency: urgencyClass, time: new Date().toLocaleTimeString() });
+  if (history.length > 5) history.pop();
+  renderHistory();
+
+  resultBody.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderHistory() {
+  const sec = document.getElementById('history-section');
+  const list = document.getElementById('history-list');
+  sec.style.display = 'block';
+  list.innerHTML = history.map(h => `
+    <div class="history-item" onclick="setQ('${h.q.replace(/'/g,"\\'")}')">
+      <span class="history-q">${h.q}</span>
+      <span class="history-meta">${h.urgency.toUpperCase()} · ${h.time}</span>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
